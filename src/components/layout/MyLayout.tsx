@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
+import "./MyLayout.css";
 const { Header, Content, Footer } = Layout;
 
 const MyLayout: React.FC = ({ children }) => {
@@ -19,7 +20,7 @@ const MyLayout: React.FC = ({ children }) => {
         </Menu>
       </Header>
       <Content style={{ padding: "0 50px", minHeight: "50px" }}>
-        {children}
+        <div className="site-content">{children}</div>
       </Content>
       <Footer>React Kata &copy; 2021</Footer>
     </Layout>
