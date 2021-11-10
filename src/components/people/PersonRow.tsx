@@ -13,9 +13,7 @@ export interface PersonRowProps {
 const PersonRow = (person: PersonRowProps) => {
   return (
     <Row className="row-item" gutter={[16, 16]}>
-      <Col span={3} className="title-case">
-        {person.name}
-      </Col>
+      <Col span={3}>{person.name}</Col>
       <Col span={3} className="title-case">
         {person.gender}
       </Col>

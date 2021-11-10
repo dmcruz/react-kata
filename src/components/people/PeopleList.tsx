@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Col, message, Row } from "antd";
 import { FetchHelper } from "../../services/FetchHelper";
 import PersonRow, { PersonRowProps } from "./PersonRow";
 import "./PeopleList.css";
+import { setPeople } from "../../redux/people/people.action";
 
 const PeopleList = () => {
-  const [list, setList] = useState([]);
+  // const [list, setList] = useState([]);
+  const dispatch = useDispatch();
+  const list: [] = useSelector((state: any) => state.people.list);
   const handleClickFetch = (e: any) => {
     (async () => {
       try {
-        setList(await FetchHelper.getAllPeople());
+        // setList(await FetchHelper.getAllPeople());
+        const peopleList = await FetchHelper.getAllPeople();
+        dispatch(setPeople(peopleList));
       } catch (error: any) {
         message.error(`${error}`);
       }

@@ -18,6 +18,14 @@
   - [Module 3](#module-3)
     - [Calling multiple APIs at once using Promise.all](#calling-multiple-apis-at-once-using-promiseall)
     - [Exercise: Create PersonRow Component and Pass Props](#exercise-create-personrow-component-and-pass-props)
+  - [Module 4](#module-4)
+    - [Setup Redux](#setup-redux)
+      - [1. Add dependencies](#1-add-dependencies)
+      - [2. Create Redux objects (reducer, action, store)](#2-create-redux-objects-reducer-action-store)
+      - [3. Connect the store to our application](#3-connect-the-store-to-our-application)
+      - [4. Using the Redux State](#4-using-the-redux-state)
+      - [5. Reuse the State in Another Page](#5-reuse-the-state-in-another-page)
+    - [Exercise: Create a Random Person Widget](#exercise-create-a-random-person-widget)
 
 ## Overview
 
@@ -28,6 +36,7 @@ Each branch will represent a part of this tutorial.
 1. `module-1`: Installation, setup, adding UI component library (Ant Design), adding router
 2. `module-2`: Adding style, Fetching API, useState hook, rendering state
 3. `module-3`: Promise.all, Component and Props
+4. `module-4`: Redux state management, useDispatch and useSelector hooks
 
 ## Module 1
 
@@ -496,3 +505,186 @@ The goal here is to learn about parent and child component communication through
 1. In the previous module, we displayed a list of names which is rendered by `viewPerson` embedded in `PeopleList.tsx`.
 2. Extract the `viewPerson` component into a new component `PersonRow.tsx` and render the person attributes in tabular form. Use `Row` and `Col` components of Ant Design. https://ant.design/components/grid/
 3. Pass the person attributes in `PersonRow` as properties.
+
+## Module 4
+
+In the Module 2, we learned about local state. But what if we need to share this data in another component. For that, we will be using Redux which can manage global state.
+
+In this module, the goal is to setup Redux, and apply it.
+
+References:
+
+- https://redux.js.org/tutorials/fundamentals/part-1-overview
+
+### Setup Redux
+
+#### 1. Add dependencies
+
+Add `redux`, `react-redux`, and `redux-logger` dependencies by running the following command:
+
+`npm i --save redux react-redux redux-logger`
+
+Add `@types/redux-logger` as a dev dependency:
+
+`npm i --save-dev @types/redux-logger`
+
+#### 2. Create Redux objects (reducer, action, store)
+
+The goal is to create a global state for people list.
+
+1. First, create `/src/redux` folder. Anything that has to do with redux will be placed here.
+2. We will group reducers per feature folder like `/src/redux/{feature}`.
+
+   Under feature folder we will be creating redux objects:
+
+   - `action` - an object that represents an intention to change the state. Action must specify a type field and although optional another parameter is payload or the "new value" to be sent. All action objects for the feature are placed here.
+
+   - `reducer` - a function that accepts a previous state and an action as inputs and returns the new state. Reducers are the one that knows how to modify the state. All reducer objects for the feature are placed here.
+
+3. Let's start creating our People reducer. Create `/src/redux/people` folder.
+4. Create people reducer file `/src/redux/people/people.reducer.ts`
+
+   INITIAL_STATE defines the model of your state. Any data that has to be observed or changed will go here.
+
+   ```javascript
+   const INITIAL_STATE = {
+     list: [],
+   };
+
+   const peopleReducer = (state = INITIAL_STATE, action: any) => {
+     switch (action.type) {
+       case "SET_PEOPLE_LIST":
+         return {
+           ...state,
+           list: action.payload,
+         };
+       default:
+         return state;
+     }
+   };
+
+   export default peopleReducer;
+   ```
+
+5. Create an action file in the same path `people.action.ts`
+
+```javascript
+export const setPeople = (list: any) => ({
+  type: "SET_PEOPLE_LIST",
+  payload: list,
+});
+```
+
+6. Create store file `/src/redux/store.ts`
+
+   6.1 Import createStore, applyMiddleware, combineReducers from redux
+   6.2 Import logger middleware from redux-logger. Logger will be used in development mode so that changes to the global state is logged in browser's console.
+   6.3 Import the people reducer that we created and build the reducer object.
+   6.4 Create the store object and export it.
+
+   ```javascript
+   import { createStore, applyMiddleware, combineReducers } from "redux";
+   import logger from "redux-logger";
+   import peopleReducer from "./people/people.reducer";
+
+   const middlewares = [];
+
+   if (process.env.NODE_ENV === "development") {
+     middlewares.push(logger);
+   }
+
+   const rootReducer = combineReducers({
+     people: peopleReducer,
+   });
+
+   const store = createStore(rootReducer, applyMiddleware(...middlewares));
+   export default store;
+   ```
+
+#### 3. Connect the store to our application
+
+We will be connecting the store object into all our components. We do this using `Provider` component from `react-redux`. `Provider` will wrap around the entire application in order for all the components under it to have access to the store object.
+
+1. Modify `src/index.js`. Import Provider from react-redux.
+
+   `import { Provider } from 'react-redux';`
+
+2. Import store
+
+   `import store from './redux/store';`
+
+3. Enclose `App` with `Provider` component, passing `store` as a prop.
+
+   ```jsx
+   <Provider store={store}>
+     <App />
+   </Provider>
+   ```
+
+4. Refer to `/src/index.tsx` in `module-4` branch for the changes.
+
+#### 4. Using the Redux State
+
+Let's go back to `/src/components/people/PeopleList.tsx` and remove the local states and use global state instead.
+
+1. Remove this import: `import { useState } from "react";`
+2. Remove this line: `const [list, setList] = useState([]);`
+3. Remove the usage of `setList` in `handleClickFetch`.
+4. We will be needing 2 hooks from react redux in order to dispatch a change action and extract a value from the global state. We accomplish this by using `useDispatch()` and `useSelector` hooks. Read more here: https://react-redux.js.org/api/hooks
+
+   `import { useDispatch, useSelector } from "react-redux";`
+
+5. Create a dispatch object and create a list object to extract the people list from the global state.
+
+   ```javascript
+   const dispatch = useDispatch();
+   const list: [] = useSelector((state: any) => state.people.list);
+   ```
+
+6. Import setPeople action from `/src/redux/people/people.action`
+
+   ```javascript
+   import { setPeople } from "../../redux/people/people.action";
+   ```
+
+7. In the Fetch Data click button handler, dispatch the setPeople action and pass the result of the API here.
+
+   ```javascript
+   const peopleList = await FetchHelper.getAllPeople();
+   dispatch(setPeople(peopleList));
+   ```
+
+8. Save the changes and check if the fetch data still works and list is rendered.
+
+#### 5. Reuse the State in Another Page
+
+What we have done in the previous section is replace local state with global state. Let's prove that the state can be reused outside the page the state was initially created.
+
+We will be modifying `/src/components/Home.tsx` and show a random person when it's available.
+
+1. SWAPI People API returns a maximum of 82 records. Create a random number with that maximum index.
+2. Extract the people list and pass the random index.
+
+   ```javascript
+   const randomNumber = Math.floor(Math.random() * 82);
+   const randomPerson = useSelector(
+     (state: any) => state.people.list[randomNumber]
+   );
+   ```
+
+3. Render the randomPerson value. Since `Home` is rendered first before fetching the `People` list, use the [optional chaining operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) so that in case there is no value in the state, it will not cause a runtime exception in rendering.
+
+   ```javascript
+   return (
+     <div>
+       <h1>Home</h1>
+       {randomPerson?.name}
+     </div>
+   );
+   ```
+
+4. Save the changes and reload Home. At first it should be empty. Transfer to People and fetch data, once data is fetched, go back to Home and a random person name should appear.
+
+### Exercise: Create a Random Person Widget
+
+Create a random person widget that will display all attributes available in a presentable way. Render this in `Home`. I will create this component in the next module.

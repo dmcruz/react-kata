@@ -22,7 +22,6 @@ export const FetchHelper = {
         return Promise.all(fetchPages);
       })
       .then((results: any) => {
-        console.log(typeof results);
         return Promise.all(results.map((r: any) => r.json()));
       })
       .then((data: any) => {
