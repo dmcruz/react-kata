@@ -15,6 +15,9 @@
     - [Adding Styles](#adding-styles)
     - [Fetching API](#fetching-api)
     - [Render State](#render-state)
+  - [Module 3](#module-3)
+    - [Calling multiple APIs at once using Promise.all](#calling-multiple-apis-at-once-using-promiseall)
+    - [Exercise: Create PersonRow Component and Pass Props](#exercise-create-personrow-component-and-pass-props)
 
 ## Overview
 
@@ -24,6 +27,7 @@ Each branch will represent a part of this tutorial.
 
 1. `module-1`: Installation, setup, adding UI component library (Ant Design), adding router
 2. `module-2`: Adding style, Fetching API, useState hook, rendering state
+3. `module-3`: Promise.all, Component and Props
 
 ## Module 1
 
@@ -90,8 +94,8 @@ To add router:
 
 Refer to the docs:
 
-https://ant.design/components/overview
-https://reactrouter.com/docs/en/v6/getting-started/tutorial
+- https://ant.design/components/overview
+- https://reactrouter.com/docs/en/v6/getting-started/tutorial
 
 ### Ant Design style
 
@@ -453,3 +457,42 @@ const viewPerson = list.map((item: any, index: number) => (
    ```
 
 6. Check the browser, click on People menu. Click Fetch and you should see a list of Star Wars person in the screen.
+
+## Module 3
+
+In this module, we will be learning about Promise.all, and passing props to child components.
+
+### Calling multiple APIs at once using Promise.all
+
+In Module 2, we learned about fetching API. If you notice, the API returns only the first page. What if we want to retrieve all data at once?
+
+For that refer to `module-3` branch of this repository and browse to `/src/services/FetchHelper.ts` which has `getAllPeople()` function.
+
+To consume the data in this function, here's a sample code:
+
+```jsx
+(async () => {
+  try {
+    const people = await FetchHelper.getAllPeople();
+  } catch (error: any) {
+    console.error(`${error}`);
+  }
+})();
+```
+
+Read more:
+
+- Promise: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+- Promise.all: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
+
+It is also possible to call fetch multiple times, this is just to show how to use Promise.all.
+
+### Exercise: Create PersonRow Component and Pass Props
+
+Time for some exercise. If in doubt you can always check `module-3` branch in this repository.
+
+The goal here is to learn about parent and child component communication through props. https://reactjs.org/docs/components-and-props.html
+
+1. In the previous module, we displayed a list of names which is rendered by `viewPerson` embedded in `PeopleList.tsx`.
+2. Extract the `viewPerson` component into a new component `PersonRow.tsx` and render the person attributes in tabular form. Use `Row` and `Col` components of Ant Design. https://ant.design/components/grid/
+3. Pass the person attributes in `PersonRow` as properties.

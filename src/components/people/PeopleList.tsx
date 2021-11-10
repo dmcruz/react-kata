@@ -1,23 +1,23 @@
-import { Button } from "antd";
 import { useState } from "react";
+import { Button, Col, message, Row } from "antd";
+import { FetchHelper } from "../../services/FetchHelper";
+import PersonRow, { PersonRowProps } from "./PersonRow";
+import "./PeopleList.css";
+
 const PeopleList = () => {
   const [list, setList] = useState([]);
   const handleClickFetch = (e: any) => {
-    fetch("https://swapi.dev/api/people")
-      .then((res: Response) => res.json())
-      .then(
-        (data: any) => {
-          console.log(data.results);
-          setList(data.results);
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
+    (async () => {
+      try {
+        setList(await FetchHelper.getAllPeople());
+      } catch (error: any) {
+        message.error(`${error}`);
+      }
+    })();
   };
 
-  const viewPerson = list.map((item: any, index: number) => (
-    <li key={index}>{item.name}</li>
+  const viewPerson = list.map((person: PersonRowProps, index: number) => (
+    <PersonRow key={index} {...person} />
   ));
   return (
     <div>
@@ -27,7 +27,21 @@ const PeopleList = () => {
         </Button>
       </div>
       <div>
-        <ul>{viewPerson}</ul>
+        <Row
+          className="row-header"
+          gutter={[16, 16]}
+          style={{ display: list.length > 0 ? "" : "none" }}
+        >
+          <Col span={3}>Name</Col>
+          <Col span={3}>Gender</Col>
+          <Col span={3}>Height</Col>
+          <Col span={3}>Mass</Col>
+          <Col span={3}>Hair Color</Col>
+          <Col span={3}>Skin Color</Col>
+          <Col span={3}>Eye Color</Col>
+          <Col span={3}>Birth Year</Col>
+        </Row>
+        {viewPerson}
       </div>
     </div>
   );

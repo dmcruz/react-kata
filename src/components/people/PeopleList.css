@@ -1,0 +1,15 @@
+.title-case {
+  text-transform: lowercase;
+}
+.title-case::first-letter {
+  text-transform: uppercase;
+}
+
+.row-header {
+  font-weight: bolder;
+}
+
+.row-item {
+  border-bottom: 1px solid #eee;
+  padding: 8px;
+}
