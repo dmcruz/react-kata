@@ -14,6 +14,7 @@
   - [Module 2](#module-2)
     - [Adding Styles](#adding-styles)
     - [Fetching API](#fetching-api)
+    - [Render State](#render-state)
 
 ## Overview
 
@@ -312,7 +313,11 @@ https://swapi.dev/documentation
 1.  Create `PeopleList.tsx` under `/src/components/people`. The goal is to create a button that when clicked will request RestAPI.
 
     1.1 Import Button from antd.
-    `import { Button } from "antd";`
+
+    ```
+      import { Button } from "antd";
+    ```
+
     1.2 Render the Button.
 
     ```jsx
@@ -342,83 +347,85 @@ https://swapi.dev/documentation
     );
     ```
 
-Full snippet of `PeopleList.tsx`:
+    Full snippet of `PeopleList.tsx`:
 
-```jsx
-import { Button } from "antd";
-const PeopleList = () => {
-  const handleClickFetch = (e: any) => {
-    fetch("https://swapi.dev/api/people")
-      .then((res: Response) => res.json())
-      .then(
-        (data: any) => {
-          console.log(data.results);
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-  };
-
-  return (
-    <div>
-      <div>
-        <Button type="primary" onClick={handleClickFetch}>
-          Fetch Data
-        </Button>
-      </div>
-    </div>
-  );
-};
-export default PeopleList;
-```
-
-    1.4 Modify `People.tsx` and import `PeopleList` and render it.
-
-    ``` jsx
-      import PeopleList from "./people/PeopleList";
-
-      const People = () => {
-        return (
-          <div>
-            <h1>People</h1>
-            <PeopleList />
-          </div>
-        );
+    ```jsx
+    import { Button } from "antd";
+    const PeopleList = () => {
+      const handleClickFetch = (e: any) => {
+        fetch("https://swapi.dev/api/people")
+          .then((res: Response) => res.json())
+          .then(
+            (data: any) => {
+              console.log(data.results);
+            },
+            (error) => {
+              console.error(error);
+            }
+          );
       };
-      export default People;
 
+      return (
+        <div>
+          <div>
+            <Button type="primary" onClick={handleClickFetch}>
+              Fetch Data
+            </Button>
+          </div>
+        </div>
+      );
+    };
+    export default PeopleList;
     ```
 
-    1.5 Check the browser and click the button. On the browser's console you should see the response from the API.
+2.  Modify `People.tsx` and import `PeopleList` and render it.
 
-2. Now let's render the result on the screen. For that we will be utilising local state to store the data. Functional components are stateless components. In order to use state, we have to add `useState` hook from react.
+    ```jsx
+    import PeopleList from "./people/PeopleList";
+
+    const People = () => {
+      return (
+        <div>
+          <h1>People</h1>
+          <PeopleList />
+        </div>
+      );
+    };
+    export default People;
+    ```
+
+3.  Check the browser and click the button. On the browser's console you should see the response from the API.
+
+### Render State
+
+Now let's render the result on the screen. For that we will be utilising local state to store the data. Functional components are stateless components. In order to use state, we have to add `useState` hook from react.
 
 Read more: https://reactjs.org/docs/hooks-state.html
 
-2.1 Import useState from react
-`import { useState } from "react";`
+1. Import useState from react
 
-2.2 `useState()` is a function that accepts initial state and returns 2 values: the current state and the function that updates it. What we need is to retrieve a list of people from SWAPI People api and return to the screen. For that we will construct a list state object and initialize it to an empty array.
+   `import { useState } from "react";`
 
-`const [list, setList] = useState([]);`
+2. `useState()` is a function that accepts initial state and returns 2 values: the current state and the function that updates it. What we need is to retrieve a list of people from SWAPI People api and return to the screen. For that we will construct a list state object and initialize it to an empty array.
 
-2.3 Call `setList` and pass the results obtained from the API. Inspecting SWAPI People result, list is returned under `results` property of the response.
+   `const [list, setList] = useState([]);`
 
-```jsx
-fetch("https://swapi.dev/api/people")
-  .then((res: Response) => res.json())
-  .then(
-    (data: any) => {
-      setList(data.results); // updated here
-    },
-    (error) => {
-      console.error(error);
-    }
-  );
-```
+3. Call `setList` and pass the results obtained from the API. Inspecting SWAPI People result, list is returned under `results` property of the response.
 
-2.4 Now we render the results on the component using the `list` state object. In react, when rendering multiple items, they have to be uniquely identified with a `key`. We will use `map` function to return a rendered item. For now we only display the name of the Star Wars person. We use the built in index parameter of map to pass to key.
+   ```jsx
+   fetch("https://swapi.dev/api/people")
+     .then((res: Response) => res.json())
+     .then(
+       (data: any) => {
+         setList(data.results); // updated here
+       },
+       (error) => {
+         console.error(error);
+       }
+     );
+   ```
+
+4. Now we render the results on the component using the `list` state object. In react, when rendering multiple items, they have to be uniquely identified with a `key`. We will use `map` function to return a rendered item. For now we only display the name of the Star Wars person. We use the built in index parameter of map to pass to key.
 
 Read more: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
 
@@ -428,21 +435,21 @@ const viewPerson = list.map((item: any, index: number) => (
 ));
 ```
 
-2.5 Update the rendered item in the screen, render `viewPerson`. Save the changes.
+5. Update the rendered item in the screen, render `viewPerson`. Save the changes.
 
-```jsx
-return (
-  <div>
-    <div>
-      <Button type="primary" onClick={handleClickFetch}>
-        Fetch Data
-      </Button>
-    </div>
-    <div>
-      <ul>{viewPerson}</ul>
-    </div>
-  </div>
-);
-```
+   ```jsx
+   return (
+     <div>
+       <div>
+         <Button type="primary" onClick={handleClickFetch}>
+           Fetch Data
+         </Button>
+       </div>
+       <div>
+         <ul>{viewPerson}</ul>
+       </div>
+     </div>
+   );
+   ```
 
-2.6 Check the browser, click on People menu. Click Fetch and you should see a list of Star Wars person in the screen.
+6. Check the browser, click on People menu. Click Fetch and you should see a list of Star Wars person in the screen.
