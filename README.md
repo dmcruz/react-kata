@@ -578,8 +578,11 @@ export const setPeople = (list: any) => ({
 6. Create store file `/src/redux/store.ts`
 
    6.1 Import createStore, applyMiddleware, combineReducers from redux
+
    6.2 Import logger middleware from redux-logger. Logger will be used in development mode so that changes to the global state is logged in browser's console.
+
    6.3 Import the people reducer that we created and build the reducer object.
+
    6.4 Create the store object and export it.
 
    ```javascript
@@ -655,6 +658,7 @@ Let's go back to `/src/components/people/PeopleList.tsx` and remove the local st
    ```
 
 8. Save the changes and check if the fetch data still works and list is rendered.
+9. Inspect the browser console, and see that redux logger is logging whenever there's a change in the state.
 
 #### 5. Reuse the State in Another Page
 
