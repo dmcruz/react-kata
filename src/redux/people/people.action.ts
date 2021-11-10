@@ -1,4 +1,4 @@
-export const setPeople = (list: any) => ({
+export const setPeople = (list: []) => ({
   type: "SET_PEOPLE_LIST",
   payload: list,
 });

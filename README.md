@@ -23,9 +23,10 @@
       - [1. Add dependencies](#1-add-dependencies)
       - [2. Create Redux objects (reducer, action, store)](#2-create-redux-objects-reducer-action-store)
       - [3. Connect the store to our application](#3-connect-the-store-to-our-application)
-      - [4. Using the Redux State](#4-using-the-redux-state)
-      - [5. Reuse the State in Another Page](#5-reuse-the-state-in-another-page)
-    - [Exercise: Create a Random Person Widget](#exercise-create-a-random-person-widget)
+    - [Using the Redux State](#using-the-redux-state)
+    - [Reuse the State in Another Page](#reuse-the-state-in-another-page)
+    - [Exercise 1: Create a Random Person Widget](#exercise-1-create-a-random-person-widget)
+    - [Exercise 2: Create Starships Page and Redux State](#exercise-2-create-starships-page-and-redux-state)
 
 ## Overview
 
@@ -626,7 +627,7 @@ We will be connecting the store object into all our components. We do this using
 
 4. Refer to `/src/index.tsx` in `module-4` branch for the changes.
 
-#### 4. Using the Redux State
+### Using the Redux State
 
 Let's go back to `/src/components/people/PeopleList.tsx` and remove the local states and use global state instead.
 
@@ -660,7 +661,7 @@ Let's go back to `/src/components/people/PeopleList.tsx` and remove the local st
 8. Save the changes and check if the fetch data still works and list is rendered.
 9. Inspect the browser console, and see that redux logger is logging whenever there's a change in the state.
 
-#### 5. Reuse the State in Another Page
+### Reuse the State in Another Page
 
 What we have done in the previous section is replace local state with global state. Let's prove that the state can be reused outside the page the state was initially created.
 
@@ -689,6 +690,12 @@ We will be modifying `/src/components/Home.tsx` and show a random person when it
 
 4. Save the changes and reload Home. At first it should be empty. Transfer to People and fetch data, once data is fetched, go back to Home and a random person name should appear.
 
-### Exercise: Create a Random Person Widget
+### Exercise 1: Create a Random Person Widget
 
 Create a random person widget that will display all attributes available in a presentable way. Render this in `Home`. I will create this component in the next module.
+
+### Exercise 2: Create Starships Page and Redux State
+
+SWAPI Starships API: https://swapi.dev/api/starships/
+
+Create a new route to `/starships` that will render Starship list on load. Use `useEffect` hook for this. Read more here: https://reactjs.org/docs/hooks-effect.html
