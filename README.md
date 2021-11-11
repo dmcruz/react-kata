@@ -27,6 +27,9 @@
     - [Reuse the State in Another Page](#reuse-the-state-in-another-page)
     - [Exercise 1: Create a Random Person Widget](#exercise-1-create-a-random-person-widget)
     - [Exercise 2: Create Starships Page and Redux State](#exercise-2-create-starships-page-and-redux-state)
+  - [Module 5](#module-5)
+    - [Change Log](#change-log)
+    - [useEffect](#useeffect)
 
 ## Overview
 
@@ -38,6 +41,7 @@ Each branch will represent a part of this tutorial.
 2. `module-2`: Adding style, Fetching API, useState hook, rendering state
 3. `module-3`: Promise.all, Component and Props
 4. `module-4`: Redux state management, useDispatch and useSelector hooks
+5. `module-5`: tackling exercises in Module 4, useEffect
 
 ## Module 1
 
@@ -62,6 +66,8 @@ code .
 ```
 
 3. Since the project has been bootstrapped from create-react-app the dependencies have been installed. All you have to do is run `npm start` in terminal to run the app.
+
+   Note: run `npm install` before `npm start` if you didn't start from scratch.
 
 4. Once the app has been compiled successfully, access the URL in your browser: http://localhost:3000
 5. You can open another instance of a terminal and run tests.
@@ -122,7 +128,7 @@ In this section we will create the layout of our website. It will be a simple la
 3. Under `layout` folder, create `MyLayout.tsx`.
 
 ```jsx
-import { Layout, Menu } from "antd";
+import { Layout, Menu } from 'antd';
 const { Header, Content, Footer } = Layout;
 
 const MyLayout: React.FC = ({ children }) => {
@@ -141,7 +147,7 @@ const MyLayout: React.FC = ({ children }) => {
           </Menu.Item>
         </Menu>
       </Header>
-      <Content style={{ padding: "0 50px", minHeight: "50px" }}>
+      <Content style={{ padding: '0 50px', minHeight: '50px' }}>
         {children}
       </Content>
       <Footer>React Kata &copy; 2021</Footer>
@@ -155,9 +161,9 @@ export default MyLayout;
 4. Modify `App.tsx`, remove all the code. Import MyLayout and render it.
 
 ```jsx
-import MyLayout from "./components/layout/MyLayout";
+import MyLayout from './components/layout/MyLayout';
 
-import "antd/dist/antd.css";
+import 'antd/dist/antd.css';
 
 function App() {
   return <MyLayout />;
@@ -222,8 +228,8 @@ Partial snippet shows the modified part of MyLayout.tsx:
 Full snippet:
 
 ```jsx
-import { Link } from "react-router-dom";
-import { Layout, Menu } from "antd";
+import { Link } from 'react-router-dom';
+import { Layout, Menu } from 'antd';
 const { Header, Content, Footer } = Layout;
 
 const MyLayout: React.FC = ({ children }) => {
@@ -242,7 +248,7 @@ const MyLayout: React.FC = ({ children }) => {
           </Menu.Item>
         </Menu>
       </Header>
-      <Content style={{ padding: "0 50px", minHeight: "50px" }}>
+      <Content style={{ padding: '0 50px', minHeight: '50px' }}>
         {children}
       </Content>
       <Footer>React Kata &copy; 2021</Footer>
@@ -260,8 +266,8 @@ export default MyLayout;
 4. Import `Home` and `People` components in `App.tsx`.
 
 ```typescript
-import Home from "./components/Home";
-import People from "./components/People";
+import Home from './components/Home';
+import People from './components/People';
 ```
 
 5. Modify App.tsx rendered component to:
@@ -300,7 +306,7 @@ Refer to branch module-2 for the source code.
 2. Modify `MyLayout.tsx` and import the css that was just created.
 
 ```js
-import "./MyLayout.css";
+import './MyLayout.css';
 ```
 
 3. Still in `MyLayout.tsx`, enclose the {children} elements with div referring to site-content class.
@@ -342,7 +348,7 @@ https://swapi.dev/documentation
 
     ```jsx
     const handleClickFetch = (e: any) => {
-      fetch("https://swapi.dev/api/people")
+      fetch('https://swapi.dev/api/people')
         .then((res: Response) => res.json())
         .then(
           (data: any) => {
@@ -364,10 +370,10 @@ https://swapi.dev/documentation
     Full snippet of `PeopleList.tsx`:
 
     ```jsx
-    import { Button } from "antd";
+    import { Button } from 'antd';
     const PeopleList = () => {
       const handleClickFetch = (e: any) => {
-        fetch("https://swapi.dev/api/people")
+        fetch('https://swapi.dev/api/people')
           .then((res: Response) => res.json())
           .then(
             (data: any) => {
@@ -395,7 +401,7 @@ https://swapi.dev/documentation
 2.  Modify `People.tsx` and import `PeopleList` and render it.
 
     ```jsx
-    import PeopleList from "./people/PeopleList";
+    import PeopleList from './people/PeopleList';
 
     const People = () => {
       return (
@@ -427,7 +433,7 @@ Read more: https://reactjs.org/docs/hooks-state.html
 3. Call `setList` and pass the results obtained from the API. Inspecting SWAPI People result, list is returned under `results` property of the response.
 
    ```jsx
-   fetch("https://swapi.dev/api/people")
+   fetch('https://swapi.dev/api/people')
      .then((res: Response) => res.json())
      .then(
        (data: any) => {
@@ -441,13 +447,13 @@ Read more: https://reactjs.org/docs/hooks-state.html
 
 4. Now we render the results on the component using the `list` state object. In react, when rendering multiple items, they have to be uniquely identified with a `key`. We will use `map` function to return a rendered item. For now we only display the name of the Star Wars person. We use the built in index parameter of map to pass to key.
 
-Read more: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+   Read more: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
 
-```jsx
-const viewPerson = list.map((item: any, index: number) => (
-  <li key={index}>{item.name}</li>
-));
-```
+   ```jsx
+   const viewPerson = list.map((item: any, index: number) => (
+     <li key={index}>{item.name}</li>
+   ));
+   ```
 
 5. Update the rendered item in the screen, render `viewPerson`. Save the changes.
 
@@ -476,7 +482,7 @@ In this module, we will be learning about Promise.all, and passing props to chil
 
 In Module 2, we learned about fetching API. If you notice, the API returns only the first page. What if we want to retrieve all data at once?
 
-For that refer to `module-3` branch of this repository and browse to `/src/services/FetchHelper.ts` which has `getAllPeople()` function.
+For that refer to `module-3` branch of this repository and browse to [`/src/services/FetchHelper.ts`](https://github.com/dmcruz/react-kata/blob/module-3/src/services/FetchHelper.ts) which has `getAllPeople()` function.
 
 To consume the data in this function, here's a sample code:
 
@@ -554,7 +560,7 @@ The goal is to create a global state for people list.
 
    const peopleReducer = (state = INITIAL_STATE, action: any) => {
      switch (action.type) {
-       case "SET_PEOPLE_LIST":
+       case 'SET_PEOPLE_LIST':
          return {
            ...state,
            list: action.payload,
@@ -569,12 +575,12 @@ The goal is to create a global state for people list.
 
 5. Create an action file in the same path `people.action.ts`
 
-```javascript
-export const setPeople = (list: any) => ({
-  type: "SET_PEOPLE_LIST",
-  payload: list,
-});
-```
+   ```javascript
+   export const setPeople = (list: any) => ({
+     type: 'SET_PEOPLE_LIST',
+     payload: list,
+   });
+   ```
 
 6. Create store file `/src/redux/store.ts`
 
@@ -587,13 +593,13 @@ export const setPeople = (list: any) => ({
    6.4 Create the store object and export it.
 
    ```javascript
-   import { createStore, applyMiddleware, combineReducers } from "redux";
-   import logger from "redux-logger";
-   import peopleReducer from "./people/people.reducer";
+   import { createStore, applyMiddleware, combineReducers } from 'redux';
+   import logger from 'redux-logger';
+   import peopleReducer from './people/people.reducer';
 
    const middlewares = [];
 
-   if (process.env.NODE_ENV === "development") {
+   if (process.env.NODE_ENV === 'development') {
      middlewares.push(logger);
    }
 
@@ -648,7 +654,7 @@ Let's go back to `/src/components/people/PeopleList.tsx` and remove the local st
 6. Import setPeople action from `/src/redux/people/people.action`
 
    ```javascript
-   import { setPeople } from "../../redux/people/people.action";
+   import { setPeople } from '../../redux/people/people.action';
    ```
 
 7. In the Fetch Data click button handler, dispatch the setPeople action and pass the result of the API here.
@@ -699,3 +705,42 @@ Create a random person widget that will display all attributes available in a pr
 SWAPI Starships API: https://swapi.dev/api/starships/
 
 Create a new route to `/starships` that will render Starship list on load. Use `useEffect` hook for this. Read more here: https://reactjs.org/docs/hooks-effect.html
+
+## Module 5
+
+This module is more about tackling the exercises. There are a lot of changes so you can take a look at `module-5` branch.
+
+Added dependency:
+
+1. ts-md5 - for hashing md5 used for generating Gravatar identicon
+
+   `npm i --save ts-md5`
+
+### Change Log
+
+1. Module 4 Exersise 1: RandomPerson widget to generate a featured person in Home page
+2. Module 4 Exercise 2: Starship component and redux created
+3. Generic getAll function is created in FetchHelper.ts
+4. People List is now a grid of cards
+
+### useEffect
+
+`useEffect` hook is equivalent to componentDidMount, componentDidUpdate, and componentWillAmount lifecycle methods. When the component is loaded this effect is called.
+
+There are 2 arguments in this function. First argument is the behavior or function, second argument is the array of dependencies. React will compare previous value of dependency with the new value to trigger if it needs to perform the effect function. If second argument is an empty array, it will invoke useEffect once only.
+
+The following snippet retrieves Starships API on load. This is only done once because the second argument is an empty array.
+
+```javascript
+  useEffect(() => {
+    (async () => {
+      try {
+        const list = await FetchHelper.getAll(SwapiUrls.STARSHIPS);
+        dispatch(setStarships(list));
+      } catch (error: any) {
+        message.error(`${error}`);
+      }
+    })();
+    // eslint-disable-next-line
+  }, []);
+```

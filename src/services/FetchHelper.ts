@@ -1,4 +1,4 @@
-import { SwapiUrls } from "./SwapiUrls";
+import { SwapiUrls } from './SwapiUrls';
 
 export const FetchHelper = {
   async getAllPeople(): Promise<[] | any> {
@@ -34,5 +34,32 @@ export const FetchHelper = {
         );
       });
     return people;
+  },
+  async getAll(url: string): Promise<[] | any> {
+    let list: any[] = [];
+    await fetch(url)
+      .then((res: Response) => res.json())
+      .then((data: any) => {
+        list = data.results;
+        return data.count;
+      })
+      .then((count: number) => {
+        const totalPages = Math.ceil(count / 10);
+        const fetchPages = [];
+        for (let i = 2; i <= totalPages; i++) {
+          fetchPages.push(fetch(`${url}?page=${i}`));
+        }
+        return Promise.all(fetchPages);
+      })
+      .then((results: any) => {
+        return Promise.all(results.map((r: any) => r.json()));
+      })
+      .then((data: any) => {
+        list = data.reduce(
+          (accumulator: any, item: any) => [...accumulator, ...item.results],
+          list
+        );
+      });
+    return list;
   },
 };

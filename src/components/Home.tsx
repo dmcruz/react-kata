@@ -1,15 +1,15 @@
-import { useSelector } from "react-redux";
-
+import { Col, Row } from 'antd';
+import RandomPerson from './widget/RandomPerson';
 const Home = () => {
-  const randomNumber = Math.floor(Math.random() * 82);
-  const randomPerson = useSelector(
-    (state: any) => state.people.list[randomNumber]
-  );
-
   return (
     <div>
-      <h1>Home</h1>
-      {randomPerson?.name}
+      <Row>
+        <Col span={8}>
+          <RandomPerson />
+        </Col>
+        <Col span={8}></Col>
+        <Col span={8}></Col>
+      </Row>
     </div>
   );
 };
