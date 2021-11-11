@@ -1,26 +1,26 @@
-export interface IPerson {
-  name: string;
-  height: string;
-  mass: string;
-  hair_color: string;
-  skin_color: string;
-  eye_color: string;
-  birth_year: string;
-  gender: string;
-}
-export interface IPeopleState {
-  list: Array<IPerson>;
-}
-const INITIAL_STATE: IPeopleState = {
+const INITIAL_STATE = {
   list: [],
+  loading: false,
 };
 
 const peopleReducer = (state = INITIAL_STATE, action: any) => {
   switch (action.type) {
-    case 'SET_PEOPLE_LIST':
+    case 'FETCH_PEOPLE_START':
       return {
         ...state,
+        loading: true,
+      };
+    case 'FETCH_PEOPLE_SUCCESS':
+      return {
+        ...state,
+        loading: false,
         list: action.payload,
+      };
+    case 'FETCH_PEOPLE_ERROR':
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
       };
     default:
       return state;

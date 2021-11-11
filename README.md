@@ -30,18 +30,27 @@
   - [Module 5](#module-5)
     - [Change Log](#change-log)
     - [useEffect](#useeffect)
+  - [Module 6](#module-6)
+    - [Generator Functions](#generator-functions)
+    - [Common Pattern in Saga](#common-pattern-in-saga)
+    - [Setup Redux Saga](#setup-redux-saga)
+    - [Modify Component to Dispatch the Triggering Saga Function](#modify-component-to-dispatch-the-triggering-saga-function)
+    - [Refactoring](#refactoring)
+    - [Adding Loading Indicator](#adding-loading-indicator)
+    - [Exercise: Create the saga for Starships](#exercise-create-the-saga-for-starships)
 
 ## Overview
 
-Learn react by example.
+Learn react by example. In this walkthrough you will be building a SW Manager portal, where you can view people and starships from the Star Wars universe. We will be utilizing the Star Wars API (SWAPI) which is publicly available without authentication. Later we will enhance this app by building your squad and adding starships in hangar. Don't expect too much, this will be a simple app.
 
-Each branch will represent a part of this tutorial.
+Each branch of this repository will represent a part of this tutorial. In order to avoid spoilers to exercises, avoid running the master branch, but that is up to you.
 
 1. `module-1`: Installation, setup, adding UI component library (Ant Design), adding router
 2. `module-2`: Adding style, Fetching API, useState hook, rendering state
 3. `module-3`: Promise.all, Component and Props
 4. `module-4`: Redux state management, useDispatch and useSelector hooks
 5. `module-5`: tackling exercises in Module 4, useEffect
+6. `module-6`: generator function basics and Redux Sagas
 
 ## Module 1
 
@@ -744,3 +753,188 @@ The following snippet retrieves Starships API on load. This is only done once be
     // eslint-disable-next-line
   }, []);
 ```
+
+## Module 6
+
+Goal in this module is to apply redux sagas. Learn more about it here:
+
+- https://redux-saga.js.org/
+- https://redux-saga.js.org/docs/introduction/BeginnerTutorial/
+
+### Generator Functions
+
+The foundation of redux saga is generator functions. Learn more about generator function: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*
+
+Example of a generator function:
+
+```javascript
+function* fetchStarshipsAsync() {
+  const list = yield FetchHelper.getAll(SwapiUrls.STARSHIPS);
+  yield put(setStarships(list));
+}
+```
+
+In generator function, each yielded function is awaited before proceeding to the next one. In the example, result of Starships API is awaited first and set to list before the dispatching of setStarships is done. Calling this function does not execute immediately, it has to be iterated by using next(). Saga middleware takes care of handling this.
+
+```javascript
+// this will not do anything and will be paused (suspended)
+fetchStarshipsAsync();
+
+// this will execute the yielded functions
+const myFunc = fetchStarshipsAsync();
+myFunc.next();
+myFunc.next();
+```
+
+### Common Pattern in Saga
+
+As you have noticed API calls exists in the component such as PeopleList and StarshipList. We will be taking out these API calls out of components and delegate them to sagas. This will result in cleaner code and clear separation of concern: components are for rendering while sagas are for managing side effects.
+
+Currently, PeopleList fetches People API on load. Our target will be for PeopleList to dispatch a request for People API on load. A saga watcher function will trigger the API when it receives a fetch request. We will be also adding a loading indicator when fetching data is in progress.
+
+Let's imagine 3 events:
+
+1. `requestStart` - this is where loading will be set to true as it marks that the fetch is in progress. This will trigger the request to fetch API.
+2. `requestSuccess` - this event indicates that the API has returned the response data, and loading should be set to false.
+3. `requestError` - this event indicates an error during API request, so we can obtain error message here, and loading should be set to false.
+
+You will find this is a common pattern we will be applying in sagas.
+
+### Setup Redux Saga
+
+1.  Add dependency
+
+    `npm install --save redux-saga`
+
+2.  Modify `people.reducer.ts`. Add loading (set to false) in INITIAL_STATE. Create 3 action types: FETCH_PEOPLE_START, FETCH_PEOPLE_SUCCESS, FETCH_PEOPLE_END.
+
+    Partial Snippet:
+
+    ```javascript
+    const INITIAL_STATE = {
+      list: [],
+      loading: false,
+    };
+
+    // ... code redacted
+
+    case 'FETCH_PEOPLE_START':
+      return {
+        ...state,
+        loading: true,
+      };
+    case 'FETCH_PEOPLE_SUCCESS':
+      return {
+        ...state,
+        loading: false,
+        list: action.payload,
+      };
+    case 'FETCH_PEOPLE_ERROR':
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    ```
+
+3.  Create 3 actions corresponding to previous step in `people.action.ts`.
+
+    Snippet:
+
+    ```javascript
+    export const fetchPeopleStart = () => ({
+      type: 'FETCH_PEOPLE_START',
+    });
+
+    export const fetchPeopleSuccess = (list: []) => ({
+      type: 'FETCH_PEOPLE_SUCCESS',
+      payload: list,
+    });
+
+    export const fetchPeopleError = (error: any) => ({
+      type: 'FETCH_PEOPLE_ERROR',
+      payload: error,
+    });
+    ```
+
+4.  Create the People saga under `/src/redux/people/people.saga.ts`.
+
+    ```javascript
+    import { call, put, takeLatest } from 'redux-saga/effects';
+    import { FetchHelper } from '../../services/FetchHelper';
+    import { SwapiUrls } from '../../services/SwapiUrls';
+    import { fetchPeopleError, fetchPeopleSuccess } from './people.action';
+
+    // This is a worker function responsible for fetching API and bind data to state if success or bind error if fail
+    function* fetchPeopleAsync(): Generator<any, any, any> {
+      try {
+        const people = yield call(FetchHelper.getAll, SwapiUrls.PEOPLE);
+        yield put(fetchPeopleSuccess(people));
+      } catch (e: any) {
+        yield put(fetchPeopleError(e.message || e));
+      }
+    }
+
+    // This is a watcher function, once FETCH_PEOPLE_START is received, it will trigger fetchPeopleAsync
+    export function* watchFetchPeopleStart() {
+      yield takeLatest('FETCH_PEOPLE_START', fetchPeopleAsync);
+    }
+
+    ```
+
+5.  Create root-saga.ts under `/src/redux/root-saga.ts`. This will be the place we will aggregate multiple sagas parallely. For now we have 1 saga, but should we have more we just add here.
+
+    ```javascript
+    import { all, call } from 'redux-saga/effects';
+    import { watchFetchPeopleStart } from './people/people.saga';
+
+    export default function* rootSaga() {
+      yield all([call(watchFetchPeopleStart)]);
+    }
+    ```
+
+6.  Add redux saga middleware in our `store.ts`.
+
+    6.1 Import createSagaMiddleware
+
+        import createSagaMiddleware from 'redux-saga'
+
+    6.2 Import rootSaga
+
+        import rootSaga from './root-saga';
+
+    6.3 Create sagaMiddleware and add it in middlewares.
+
+        const sagaMiddleware = createSagaMiddleware();
+        const middlewares: any = [sagaMiddleware];
+
+    6.4 Run the saga
+
+        sagaMiddleware.run(rootSaga);
+
+    6.5 You may refer to [`store.ts` source code](https://github.com/dmcruz/react-kata/blob/module-6/src/redux/store.ts) in module-6 branch of this repository for the complete code.
+
+### Modify Component to Dispatch the Triggering Saga Function
+
+1. Modify `PeopleList.tsx`, import `fetchPeopleStart` action and replace the `useEffect` function like this:
+
+   ```javascript
+   useEffect(() => {
+     dispatch(fetchPeopleStart());
+   }, []);
+   ```
+
+2. Save and reload the app. If everything is setup correctly, the data will load as usual. If not, refer to `module-6` branch and check if you missed anything.
+
+### Refactoring
+
+1. Since `setPeople` action or `SET_PEOPLE_LIST` is no longer in use, it has been removed from `people.action.ts` and `people.reducer.ts`.
+
+### Adding Loading Indicator
+
+1. Modify `PeopleList.tsx`, use `useSelector` hook to get the `loading` state and show a loading indicator. To do this, you can enclose the area you want to cover with <Skeleton loading={loading} avatar active></Skeleton>.
+2. Refresh People page and you should see a shimmer on load before the data is loaded.
+
+### Exercise: Create the saga for Starships
+
+Challenge yourself to create the saga for Starships. The solution for this exercise will be available in Module 7.
