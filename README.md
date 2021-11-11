@@ -932,7 +932,7 @@ You will find this is a common pattern we will be applying in sagas.
 
 ### Adding Loading Indicator
 
-1. Modify `PeopleList.tsx`, use `useSelector` hook to get the `loading` state and show a loading indicator. To do this, you can enclose the area you want to cover with <Skeleton loading={loading} avatar active></Skeleton>.
+1. Modify `PeopleList.tsx`, use `useSelector` hook to get the `loading` state and show a loading indicator. To do this, you can enclose the area you want to cover with `<Skeleton loading={loading} avatar active></Skeleton>`.
 2. Refresh People page and you should see a shimmer on load before the data is loaded.
 
 ### Exercise: Create the saga for Starships
