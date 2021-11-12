@@ -38,10 +38,17 @@
     - [Refactoring](#refactoring)
     - [Adding Loading Indicator](#adding-loading-indicator)
     - [Exercise: Create the saga for Starships](#exercise-create-the-saga-for-starships)
+  - [Module 7](#module-7)
+    - [Change Log](#change-log-1)
+    - [withLoading Higher Order Component (HOC)](#withloading-higher-order-component-hoc)
+    - [Unit testing Redux and Sagas](#unit-testing-redux-and-sagas)
+    - [Unit testing Components](#unit-testing-components)
+    - [Exercise: Create Unit Tests](#exercise-create-unit-tests)
+  - [Extra challenge: add more features](#extra-challenge-add-more-features)
 
 ## Overview
 
-Learn react by example. In this walkthrough you will be building a SW Manager portal, where you can view people and starships from the Star Wars universe. We will be utilizing the Star Wars API (SWAPI) which is publicly available without authentication. Later we will enhance this app by building your squad and adding starships in hangar. Don't expect too much, this will be a simple app.
+Learn react by example. In this walkthrough we will be building a SW Manager portal, where we can view people and starships from the Star Wars universe. We will be utilizing the Star Wars API (SWAPI) which is publicly available without authentication. Later we will enhance this app by building your squad and adding starships in hangar. Don't expect too much, this will be a simple app.
 
 Each branch of this repository will represent a part of this tutorial. In order to avoid spoilers to exercises, avoid running the master branch, but that is up to you.
 
@@ -51,6 +58,7 @@ Each branch of this repository will represent a part of this tutorial. In order 
 4. `module-4`: Redux state management, useDispatch and useSelector hooks
 5. `module-5`: tackling exercises in Module 4, useEffect
 6. `module-6`: generator function basics and Redux Sagas
+7. `module-7`: withLoading Higher Order Component (HOC); unit testing redux, sagas and components
 
 ## Module 1
 
@@ -806,7 +814,7 @@ You will find this is a common pattern we will be applying in sagas.
 
     `npm install --save redux-saga`
 
-2.  Modify `people.reducer.ts`. Add loading (set to false) in INITIAL_STATE. Create 3 action types: FETCH_PEOPLE_START, FETCH_PEOPLE_SUCCESS, FETCH_PEOPLE_END.
+2.  Modify `people.reducer.ts`. Add loading (set to false) in INITIAL_STATE. Create 3 action types: FETCH_PEOPLE_START, FETCH_PEOPLE_SUCCESS, FETCH_PEOPLE_ERROR.
 
     Partial Snippet:
 
@@ -938,3 +946,81 @@ You will find this is a common pattern we will be applying in sagas.
 ### Exercise: Create the saga for Starships
 
 Challenge yourself to create the saga for Starships. The solution for this exercise will be available in Module 7.
+
+## Module 7
+
+### Change Log
+
+1. Loading of people and starships is now done in `MyLayout.tsx` since this is the master page. Whether you start reloading from home, people or starships, data will still load.
+2. Added loading indicator in `RandomPerson.tsx`
+3. Starships saga
+4. Added unit tests
+
+### withLoading Higher Order Component (HOC)
+
+Loading has been prevalent in components that require fetching API. Since this is common, let's create a wrapper component or a higher order component (HOC) that will inject the required loading state and render the loading indicator.
+
+You can check out `/src/components/wrapper/withLoading.tsx`, `/src/components/wrapper/withLoadingPeople.tsx`, `/src/components/wrapper/withLoadingStarships.tsx` for the code to accomplish this.
+
+`withLoading` renders the Skeleton loading indicator when loading property is true.
+
+`withLoadingPeople` extracts the loading state from people reducer and connects the wrapped component to redux. People components that need loading indicator should use this.
+
+`withLoadingStarships` does the same but for Starships components.
+
+Using these HOC is simple, in `RandomPerson.tsx`, we modify the exported component and surround it with the HOC function such as: `export default withLoadingPeople(RandomPerson);`.
+
+### Unit testing Redux and Sagas
+
+1. Added dev dependency on redux-saga-test-plan. To install it:
+
+   `npm i --save-dev redux-saga-test-plan`
+
+2. Samples to check from `module-7` branch:
+
+   - `/src/redux/people/people.reducer.test.ts`
+   - `/src/redux/people/people.saga.test.ts`
+
+Read more on redux-saga-test-plan: https://github.com/jfairbank/redux-saga-test-plan
+
+3. Running the tests
+
+   ```
+   npm run test -- --coverage
+   npm run test -- --coverage src/redux/people/people.reducer.test.ts
+   npm run test -- --coverage src/redux/people/people.saga.test.ts
+   ```
+
+### Unit testing Components
+
+1. Added dev dependency to sinon. To install it:
+
+   `npm i --save-dev sinon`
+   `npm i --save-dev @types/sinon`
+
+2. Samples to check
+
+   `/src/components/widget/Gravatar.test.tsx` - stateless component, easy to test
+   `/src/components/widget/RandomPerson.test.tsx` - useSelector hook should be mocked, Math.random function also in order to return a deterministic result
+
+3. Run the tests
+
+   ```
+   npm run test -- --coverage src/components/widget/Gravatar.test.tsx
+   npm run test -- --coverage src/components/widget/RandomPerson.test.tsx
+   ```
+
+### Exercise: Create Unit Tests
+
+1. Study the tests done for people reduer and saga and create the tests for starship redux.
+2. Create unit tests for other components
+
+## Extra challenge: add more features
+
+1. Create a Squad widget and display in home base
+
+   As a captain, you are building a squad of 10 people. Create a way to add or remove people in your squad, once the slot has been filled up it will not be possible to add more people. Once the person is in your squad he can no longer be recruited unless you remove him.
+
+2. Create a Hangar widget and display in home base
+
+   You have a hangar with a capacity for 10 starships, create a way to add or remove starships in your hangar. You can have mutiple starships of the same model, but you are limited to 10. By the way you can't add Death Star, dream on.

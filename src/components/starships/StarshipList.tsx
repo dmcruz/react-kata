@@ -1,9 +1,6 @@
-import { message, Table } from 'antd';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setStarships } from '../../redux/starships/starships.action';
-import { FetchHelper } from '../../services/FetchHelper';
-import { SwapiUrls } from '../../services/SwapiUrls';
+import { Table } from 'antd';
+import { useSelector } from 'react-redux';
+import withLoadingStarships from '../wrapper/withLoadingStarships';
 
 const columns = [
   {
@@ -74,7 +71,6 @@ const columns = [
 ];
 
 const Starships = () => {
-  const dispatch = useDispatch();
   const starships = useSelector((state: any) =>
     // adding key to the list by remapping the array
     state.starships.list.map((item: any, index: number) => ({
@@ -82,17 +78,6 @@ const Starships = () => {
       key: index,
     }))
   );
-  useEffect(() => {
-    (async () => {
-      try {
-        const list = await FetchHelper.getAll(SwapiUrls.STARSHIPS);
-        dispatch(setStarships(list));
-      } catch (error: any) {
-        message.error(`${error}`);
-      }
-    })();
-    // eslint-disable-next-line
-  }, []);
   return <Table columns={columns} dataSource={starships} />;
 };
-export default Starships;
+export default withLoadingStarships(Starships);

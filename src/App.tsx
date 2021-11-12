@@ -8,7 +8,7 @@ import Starships from './components/starships/StarshipList';
 
 function App() {
   return (
-    <Router>
+    <Router basename="react-kata">
       <MyLayout>
         <Routes>
           <Route path="/" element={<Home />} />

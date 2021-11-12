@@ -1,9 +1,21 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Menu, Typography } from 'antd';
+import { useDispatch } from 'react-redux';
+import { fetchPeopleStart } from '../../redux/people/people.action';
+import { fetchStarshipsStart } from '../../redux/starships/starships.action';
 import './MyLayout.css';
+
 const { Header, Content, Footer } = Layout;
 
 const MyLayout: React.FC = ({ children }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchPeopleStart());
+    dispatch(fetchStarshipsStart());
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <Layout className="layout">
       <Header>
@@ -12,7 +24,7 @@ const MyLayout: React.FC = ({ children }) => {
         </div>
         <Menu theme="dark" mode="horizontal">
           <Menu.Item key="home" title="Home">
-            <Link to="/">Home</Link>
+            <Link to="/">Home Base</Link>
           </Menu.Item>
           <Menu.Item key="people" title="People">
             <Link to="/people">People</Link>

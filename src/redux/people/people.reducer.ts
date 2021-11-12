@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
   list: [],
   loading: false,
+  error: null,
 };
 
 const peopleReducer = (state = INITIAL_STATE, action: any) => {

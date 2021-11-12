@@ -7,7 +7,7 @@ interface IGravarProps {
   name: string;
 }
 const Gravatar: React.FC<IGravarProps> = ({ name }) => {
-  if (!name) return null;
+  if (name === '') return null;
   return (
     <Avatar alt="Gravatar" src={Helper.getGravatarUrl(name, 100)} size={100} />
   );
