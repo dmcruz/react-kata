@@ -1052,6 +1052,7 @@ You can study the code in `module-8` branch to learn more.
 ### Added dependencies
 
 1. `Reselect` - a good way to derive the state values. Read more: https://github.com/reduxjs/reselect
+  
    `npm i --save reselect`
 
 ### Extra Challenge
