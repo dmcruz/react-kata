@@ -6,4 +6,7 @@ export const Helper = {
       key
     )}?d=identicon&s=${size}`;
   },
+  getHash(id: string) {
+    return Md5.hashStr(id);
+  },
 };
