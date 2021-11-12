@@ -1,4 +1,4 @@
-import { Button, Space, Table } from 'antd';
+import { Button, Space, Table, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { requestAddToHangar } from '../../redux/home-base/homeBase.action';
 import Identicon from '../widget/Identicon';
@@ -12,6 +12,16 @@ const Starships = () => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      render: (text: any, row: any, index: any) => {
+        return {
+          children: (
+            <Space direction="vertical" align="center">
+              <Identicon name={text} size />
+              <Typography.Title level={5}>{text}</Typography.Title>
+            </Space>
+          ),
+        };
+      },
     },
     {
       title: 'Model',
@@ -79,18 +89,15 @@ const Starships = () => {
       render: (text: any, row: any, index: any) => {
         return {
           children: (
-            <Space direction="vertical" align="center">
-              <Identicon name={text} size />
-              <Button
-                type="primary"
-                onClick={() => {
-                  const starshipName = text;
-                  dispatch(requestAddToHangar(starshipName));
-                }}
-              >
-                Add
-              </Button>
-            </Space>
+            <Button
+              type="primary"
+              onClick={() => {
+                const starshipName = text;
+                dispatch(requestAddToHangar(starshipName));
+              }}
+            >
+              Add
+            </Button>
           ),
         };
       },

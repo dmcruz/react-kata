@@ -1,5 +1,5 @@
 import { call, takeLatest } from 'redux-saga/effects';
-import { expectSaga, testSaga } from 'redux-saga-test-plan';
+import { expectSaga } from 'redux-saga-test-plan';
 import { fetchPeopleAsync, watchFetchPeopleStart } from './people.saga';
 import { FetchHelper } from '../../services/FetchHelper';
 import { SwapiUrls } from '../../services/SwapiUrls';

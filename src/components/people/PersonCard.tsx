@@ -66,7 +66,7 @@ const PersonCard = (person: IPersonCardProps) => {
       </Row>
       <Row justify="center">
         <Button type="primary" onClick={handleOnHire} disabled={isMemberExists}>
-          Hire
+          {isMemberExists ? 'Hired' : 'Hire'}
         </Button>
       </Row>
     </Card>
