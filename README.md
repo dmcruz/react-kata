@@ -245,7 +245,7 @@ Add routing in menu and render content according to selected link.
 
 `import { Link } from "react-router-dom";`
 
-2. Enclose the Menu Items with <Link> and pointing to path
+2. Enclose the Menu Items with `<Link>` and pointing to path
 
 Partial snippet shows the modified part of MyLayout.tsx:
 
