@@ -2,6 +2,8 @@
 
 - [React Kata](#react-kata)
   - [Overview](#overview)
+  - [Demo](#demo)
+  - [Notes](#notes)
   - [Module 1](#module-1)
     - [Prerequisites](#prerequisites)
     - [Setup](#setup)
@@ -44,7 +46,10 @@
     - [Unit testing Redux and Sagas](#unit-testing-redux-and-sagas)
     - [Unit testing Components](#unit-testing-components)
     - [Exercise: Create Unit Tests](#exercise-create-unit-tests)
-  - [Extra challenge: add more features](#extra-challenge-add-more-features)
+    - [Extra challenge: add more features](#extra-challenge-add-more-features)
+  - [Module 8](#module-8)
+    - [Added dependencies](#added-dependencies)
+    - [Extra Challenge](#extra-challenge)
 
 ## Overview
 
@@ -59,6 +64,19 @@ Each branch of this repository will represent a part of this tutorial. In order 
 5. `module-5`: tackling exercises in Module 4, useEffect
 6. `module-6`: generator function basics and Redux Sagas
 7. `module-7`: withLoading Higher Order Component (HOC); unit testing redux, sagas and components
+8. `module-8`: Wrap up; the app is now completed.
+
+## Demo
+
+Finished product is accessible here: https://dmcruz.github.io/react-kata/
+
+## Notes
+
+If you don't want to follow the walkthrough and just want to run the app, follow the steps.
+
+1. npm install
+2. npm start
+3. Open in browser: http://localhost:3000/react-kata/
 
 ## Module 1
 
@@ -1015,7 +1033,7 @@ Read more on redux-saga-test-plan: https://github.com/jfairbank/redux-saga-test-
 1. Study the tests done for people reduer and saga and create the tests for starship redux.
 2. Create unit tests for other components
 
-## Extra challenge: add more features
+### Extra challenge: add more features
 
 1. Create a Squad widget and display in home base
 
@@ -1024,3 +1042,18 @@ Read more on redux-saga-test-plan: https://github.com/jfairbank/redux-saga-test-
 2. Create a Hangar widget and display in home base
 
    You have a hangar with a capacity for 10 starships, create a way to add or remove starships in your hangar. You can have mutiple starships of the same model, but you are limited to 10. By the way you can't add Death Star, dream on.
+
+## Module 8
+
+This module completes the SW Manager Portal. Squad and Hangar widgets have been added. Home Base state is also added to manage your resources.
+
+You can study the code in `module-8` branch to learn more.
+
+### Added dependencies
+
+1. `Reselect` - a good way to derive the state values. Read more: https://github.com/reduxjs/reselect
+   `npm i --save reselect`
+
+### Extra Challenge
+
+Feel free to enhance and add more features. May the force be with you.

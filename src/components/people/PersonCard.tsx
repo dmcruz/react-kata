@@ -1,5 +1,8 @@
-import { Card, Row, Col, Space, Typography } from 'antd';
+import { Card, Row, Col, Space, Typography, Button } from 'antd';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { requestAddToSquad } from '../../redux/home-base/homeBase.action';
+import { isMemberAlready } from '../../redux/home-base/homeBase.selector';
 import Gravatar from '../widget/Gravatar';
 
 export interface IPersonCardProps {
@@ -14,6 +17,13 @@ export interface IPersonCardProps {
 }
 
 const PersonCard = (person: IPersonCardProps) => {
+  const isMemberExists = useSelector((state: any) =>
+    isMemberAlready(person?.name)(state)
+  );
+  const dispatch = useDispatch();
+  const handleOnHire = (e: any) => {
+    dispatch(requestAddToSquad(person?.name));
+  };
   return (
     <Card
       bordered={false}
@@ -53,6 +63,11 @@ const PersonCard = (person: IPersonCardProps) => {
       <Row justify="space-between">
         <Col className="row-header">Skin Color</Col>
         <Col>{person?.skin_color}</Col>
+      </Row>
+      <Row justify="center">
+        <Button type="primary" onClick={handleOnHire} disabled={isMemberExists}>
+          Hire
+        </Button>
       </Row>
     </Card>
   );
