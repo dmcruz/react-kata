@@ -1,4 +1,6 @@
 const INITIAL_STATE = {
+  captain: '',
+  isModalVisible: false,
   squad: [],
   squadMax: 10,
   hangar: [],
@@ -7,6 +9,17 @@ const INITIAL_STATE = {
 
 const homeBaseReducer = (state = INITIAL_STATE, action: any) => {
   switch (action.type) {
+    case 'SET_MODAL_VISIBLE':
+      return {
+        ...state,
+        isModalVisible: action.payload,
+      };
+    case 'SET_CAPTAIN':
+      return {
+        ...state,
+        captain: action.payload,
+        isModalVisible: false,
+      };
     case 'ADD_TO_SQUAD':
       return {
         ...state,

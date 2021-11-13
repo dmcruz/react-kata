@@ -1,3 +1,7 @@
+export const setCaptain = (name: string) => ({
+  type: 'SET_CAPTAIN',
+  payload: name,
+});
 export const addToSquad = (person: any) => ({
   type: 'ADD_TO_SQUAD',
   payload: person,

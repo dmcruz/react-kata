@@ -1,4 +1,4 @@
-import { Card, Row, Col, Typography } from 'antd';
+import { Card, Row, Col, Typography, Rate } from 'antd';
 import { shallowEqual, useSelector } from 'react-redux';
 import withLoadingStarships from '../wrapper/withLoadingStarships';
 import Identicon from './Identicon';
@@ -47,8 +47,10 @@ const RandomStarship = () => {
           <Col>{randomStarship?.consumables}</Col>
         </Row>
         <Row justify="space-between">
-          <Col className="row-header">Hyperdrive Rating</Col>
-          <Col>{randomStarship?.hyperdrive_rating}</Col>
+          <Col className="row-header">Hyperdrive</Col>
+          <Col>
+            <Rate value={randomStarship?.hyperdrive_rating} />
+          </Col>
         </Row>
       </Card>
     </>
