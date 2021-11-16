@@ -24,15 +24,20 @@ const Home = () => {
         </span>
       </Typography.Title>
       <Row justify="space-around">
-        <Col span={24} lg={5} xl={5} xxl={5}>
-          <RandomPerson />
-          <br />
-          <RandomStarship />
+        <Col span={24} xl={10} xxl={5}>
+          <Row justify="space-around">
+            <Col flex={1}>
+              <RandomPerson />
+            </Col>
+            <Col flex={1}>
+              <RandomStarship />
+            </Col>
+          </Row>
         </Col>
-        <Col span={24} lg={24} xl={12} xxl={8}>
+        <Col span={24} xl={14} xxl={8}>
           <Squad />
         </Col>
-        <Col span={24} lg={24} xl={25} xxl={10}>
+        <Col span={24} xl={24} xxl={10}>
           <Hangar />
         </Col>
       </Row>
