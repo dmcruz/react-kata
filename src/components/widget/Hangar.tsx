@@ -2,6 +2,8 @@ import { Button, Table, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { removeFromHangar } from '../../redux/home-base/homeBase.action';
+import { IAppRootState } from '../../redux/root-reducer.type';
+import { StarshipData } from '../../redux/starships/starships.types';
 
 const Hangar = () => {
   const dispatch = useDispatch();
@@ -52,7 +54,9 @@ const Hangar = () => {
   ];
 
   const navigate = useNavigate();
-  const hangar = useSelector((state: any) => state.homeBase.hangar);
+  const hangar = useSelector<IAppRootState, StarshipData[]>(
+    (state) => state.homeBase.hangar
+  );
   const view = <Table columns={columns} dataSource={hangar} />;
   const viewEmpty = (
     <Button type="primary" onClick={() => navigate('/starships')}>

@@ -2,6 +2,8 @@ import { Button, Table, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { removeFromSquad } from '../../redux/home-base/homeBase.action';
+import { PersonData } from '../../redux/people/people.types';
+import { IAppRootState } from '../../redux/root-reducer.type';
 
 const Squad = () => {
   const dispatch = useDispatch();
@@ -47,7 +49,9 @@ const Squad = () => {
   ];
 
   const navigate = useNavigate();
-  const squad = useSelector((state: any) => state.homeBase.squad);
+  const squad = useSelector<IAppRootState, PersonData[]>(
+    (state) => state.homeBase.squad
+  );
   const view = <Table columns={columns} dataSource={squad} />;
   const viewEmpty = (
     <Button type="primary" onClick={() => navigate('/people')}>

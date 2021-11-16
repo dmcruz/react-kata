@@ -2,12 +2,13 @@ import { Input, Modal } from 'antd';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCaptain } from '../../redux/home-base/homeBase.action';
+import { IAppRootState } from '../../redux/root-reducer.type';
 
 const CaptainModal = () => {
   const [name, setName] = useState('Captain');
   const dispatch = useDispatch();
-  const isModalVisible = useSelector(
-    (state: any) => state.homeBase.isModalVisible
+  const isModalVisible = useSelector<IAppRootState, boolean>(
+    (state) => state.homeBase.isModalVisible
   );
 
   const handleOk = () => {

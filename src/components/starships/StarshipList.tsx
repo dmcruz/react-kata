@@ -1,6 +1,8 @@
 import { Button, Space, Table, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { requestAddToHangar } from '../../redux/home-base/homeBase.action';
+import { IAppRootState } from '../../redux/root-reducer.type';
+import { StarshipData } from '../../redux/starships/starships.types';
 import Identicon from '../widget/Identicon';
 import withLoadingStarships from '../wrapper/withLoadingStarships';
 
@@ -104,12 +106,8 @@ const Starships = () => {
     },
   ];
 
-  const starships = useSelector((state: any) =>
-    // adding key to the list by remapping the array
-    state.starships.list.map((item: any, index: number) => ({
-      ...item,
-      key: index,
-    }))
+  const starships = useSelector<IAppRootState, StarshipData[]>(
+    (state) => state.starships.list
   );
   return <Table columns={columns} dataSource={starships} />;
 };

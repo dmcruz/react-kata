@@ -1,4 +1,6 @@
-const INITIAL_STATE = {
+import { IPeopleState } from './people.types';
+
+const INITIAL_STATE: IPeopleState = {
   list: [],
   loading: false,
   error: null,

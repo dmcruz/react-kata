@@ -1,4 +1,6 @@
-const INITIAL_STATE = {
+import { IHomeBaseState } from './homeBase.types';
+
+const INITIAL_STATE: IHomeBaseState = {
   captain: '',
   isModalVisible: false,
   squad: [],

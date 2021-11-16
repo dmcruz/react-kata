@@ -1,12 +1,15 @@
 import { Card, Row, Col, Typography, Rate } from 'antd';
 import { shallowEqual, useSelector } from 'react-redux';
+import { IAppRootState } from '../../redux/root-reducer.type';
+import { StarshipData } from '../../redux/starships/starships.types';
+import { Helper } from '../../utils/Helper';
 import withLoadingStarships from '../wrapper/withLoadingStarships';
 import Identicon from './Identicon';
 
 const RandomStarship = () => {
   const randomNumber = Math.floor(Math.random() * 36);
-  const randomStarship = useSelector(
-    (state: any) => state.starships.list[randomNumber],
+  const randomStarship = useSelector<IAppRootState, StarshipData>(
+    (state) => state.starships.list[randomNumber],
     shallowEqual
   );
   const view = (
@@ -49,7 +52,12 @@ const RandomStarship = () => {
         <Row justify="space-between">
           <Col className="row-header">Hyperdrive</Col>
           <Col>
-            <Rate value={randomStarship?.hyperdrive_rating} />
+            <Rate
+              allowHalf={true}
+              value={Helper.roundNearestHalf(
+                parseFloat(randomStarship?.hyperdrive_rating)
+              )}
+            />
           </Col>
         </Row>
       </Card>

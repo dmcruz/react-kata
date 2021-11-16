@@ -9,4 +9,7 @@ export const Helper = {
   getHash(id: string) {
     return Md5.hashStr(id);
   },
+  roundNearestHalf(num: number) {
+    return Math.round(num * 2) / 2;
+  },
 };

@@ -1,12 +1,14 @@
 import { Card, Row, Col, Typography } from 'antd';
 import { shallowEqual, useSelector } from 'react-redux';
+import { PersonData } from '../../redux/people/people.types';
+import { IAppRootState } from '../../redux/root-reducer.type';
 import withLoadingPeople from '../wrapper/withLoadingPeople';
 import Gravatar from './Gravatar';
 
 const RandomPerson = () => {
   const randomNumber = Math.floor(Math.random() * 82);
-  const randomPerson = useSelector(
-    (state: any) => state.people.list[randomNumber],
+  const randomPerson = useSelector<IAppRootState, PersonData>(
+    (state) => state.people.list[randomNumber],
     shallowEqual
   );
   const view = (

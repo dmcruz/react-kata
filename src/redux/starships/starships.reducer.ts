@@ -1,4 +1,6 @@
-const INITIAL_STATE = {
+import { IStarshipsState } from './starships.types';
+
+const INITIAL_STATE: IStarshipsState = {
   list: [],
   loading: false,
   error: null,

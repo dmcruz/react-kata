@@ -1,0 +1,24 @@
+.person-card-grid {
+  width: 100%;
+  text-align: 'center';
+  align-items: center;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+.person-card-item {
+  min-width: 300px;
+  justify-content: center;
+}
+
+@media screen and (min-width: 1024px) {
+  .person-card-grid {
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .person-card-grid {
+    width: 25%;
+  }
+}
